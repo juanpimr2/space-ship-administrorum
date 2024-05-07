@@ -19,7 +19,7 @@ public class AuditService {
     }
 
     public void enviarMensajeDeAuditoria(String mensaje) {
-        kafkaTemplate.send("auditoria-topic", mensaje);
+        this.kafkaTemplate.send("auditoria-topic", mensaje);
     }
 
     @KafkaListener(topics = "auditoria-topic", groupId = "space-ship-group")

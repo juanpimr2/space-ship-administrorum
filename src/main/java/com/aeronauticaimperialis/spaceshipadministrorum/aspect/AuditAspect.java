@@ -26,5 +26,4 @@ public class AuditAspect {
         auditService.enviarMensajeDeAuditoria("Se ha creado/actualizado un usuario");
     }
 
-    // Añade otros métodos para capturar eventos de actualización y eliminación si es necesario
 }
