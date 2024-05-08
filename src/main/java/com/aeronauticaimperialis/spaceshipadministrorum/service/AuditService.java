@@ -1,33 +1,43 @@
 package com.aeronauticaimperialis.spaceshipadministrorum.service;
 
-import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Service;
-import com.aeronauticaimperialis.spaceshipadministrorum.component.AuditMessageStore;
+import com.aeronauticaimperialis.spaceshipadministrorum.model.AuditMessage;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
+@Slf4j
 public class AuditService {
-    private final KafkaTemplate<String, String> kafkaTemplate;
-    private final AuditMessageStore auditMessageStore;
-
+    private static final String TOPIC = "auditoria-topic";
     @Autowired
-    public AuditService(KafkaTemplate<String, String> kafkaTemplate, AuditMessageStore auditMessageStore) {
-        this.kafkaTemplate = kafkaTemplate;
-        this.auditMessageStore = auditMessageStore;
-    }
+    private KafkaTemplate<String,Object> template;
 
-    public void enviarMensajeDeAuditoria(String mensaje) {
-        this.kafkaTemplate.send("auditoria-topic", mensaje);
+    public void enviarMensajeDeAuditoria(AuditMessage auditMessage) {
+      try {
+        CompletableFuture<SendResult<String, Object>> future = template.send(TOPIC, auditMessage);
+        future.whenComplete((result, ex) -> {
+            if (ex == null) {
+                System.out.println("Sent message=[" + auditMessage.toString() +
+                        "] with offset=[" + result.getRecordMetadata().offset() + "]");
+            } else {
+                System.out.println("Unable to send message=[" +
+                    auditMessage.toString() + "] due to : " + ex.getMessage());
+            }
+        });
+
+    } catch (Exception ex) {
+        System.out.println("ERROR : "+ ex.getMessage());
     }
+}
 
     @KafkaListener(topics = "auditoria-topic", groupId = "space-ship-group")
-    public void listen(String message) {
-        auditMessageStore.addAuditMessage(message);
+    public void listen(AuditMessage auditMessage) {
+      log.info("consumer consume the events {} ", auditMessage.toString());
     }
 
-    public List<String> getAuditMessages() {
-        return auditMessageStore.getAuditMessages();
-    }
+
 }
