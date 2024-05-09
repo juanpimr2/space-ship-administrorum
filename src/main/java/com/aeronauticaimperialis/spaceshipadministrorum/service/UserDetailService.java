@@ -2,7 +2,6 @@ package com.aeronauticaimperialis.spaceshipadministrorum.service;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.User;
@@ -12,16 +11,16 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import com.aeronauticaimperialis.spaceshipadministrorum.constant.Constants;
 import com.aeronauticaimperialis.spaceshipadministrorum.dto.UserDetail;
+import com.aeronauticaimperialis.spaceshipadministrorum.exception.EmptyUserNameOnRequest;
+import com.aeronauticaimperialis.spaceshipadministrorum.exception.UserAlreadyExistsException;
 import com.aeronauticaimperialis.spaceshipadministrorum.repository.UserRepository;
 import com.aeronauticaimperialis.spaceshipadministrorum.request.UserCreationRequest;
 import com.aeronauticaimperialis.spaceshipadministrorum.response.UserCreationResponse;
 import com.aeronauticaimperialis.spaceshipadministrorum.utils.Encoder;
 import com.aeronauticaimperialis.spaceshipadministrorum.utils.UtilsImperatoris;
-import lombok.extern.slf4j.Slf4j;
 
 
 @Service
-@Slf4j
 public class UserDetailService implements UserDetailsService {
 
   private UserRepository userRepository;
@@ -29,7 +28,6 @@ public class UserDetailService implements UserDetailsService {
   private Encoder encoder;
 
 
-  @Autowired
   public UserDetailService(UserRepository userRepository, Encoder encoder,
       UtilsImperatoris utilsImperatoris) {
     this.userRepository = userRepository;
@@ -52,17 +50,15 @@ public class UserDetailService implements UserDetailsService {
   }
 
 
-  public ResponseEntity<UserCreationResponse> createUser(UserCreationRequest userRequest) {
+  public ResponseEntity<UserCreationResponse> createUser(UserCreationRequest userRequest) throws EmptyUserNameOnRequest, UserAlreadyExistsException {
     UserCreationResponse response = new UserCreationResponse();
     if (userRequest.getUsername() == null || userRequest.getPassword() == null) {
-      return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+      throw new EmptyUserNameOnRequest("El nombre de usuario es obligatorio.");
     }
 
     // Verificar si el nombre de usuario ya existe en la base de datos
     if (usernameExists(userRequest.getUsername())) {
-      response.setDescription("Username already exists.");
-      response.setStatus(HttpStatus.BAD_REQUEST.toString());
-      return ResponseEntity.badRequest().body(response);
+      throw new UserAlreadyExistsException("El nombre de usuario ya esta en uso.");
     }
 
     // Crear el objeto UserDetail
@@ -91,10 +87,10 @@ public class UserDetailService implements UserDetailsService {
     return existingUser.isPresent();
   }
 
-  public ResponseEntity<UserCreationResponse> createAdmin(UserCreationRequest userRequest) {
+  public ResponseEntity<UserCreationResponse> createAdmin(UserCreationRequest userRequest) throws EmptyUserNameOnRequest {
     UserCreationResponse response = new UserCreationResponse();
     if (userRequest.getUsername() == null || userRequest.getPassword() == null) {
-      return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+      throw new EmptyUserNameOnRequest("El nombre de usuario es obligatorio.");
     }
     UserDetail userDetail = new UserDetail();
 

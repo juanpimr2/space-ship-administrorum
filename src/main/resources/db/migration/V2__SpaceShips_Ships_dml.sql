@@ -1,7 +1,7 @@
 -- Definición de la tabla faction
 CREATE TABLE faction (
     code VARCHAR(50) PRIMARY KEY, -- Código único de la facción
-    name VARCHAR(200) NOT NULL, -- Nombre de la facción
+    description VARCHAR(200) NOT NULL, -- Nombre de la facción
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- Fecha y hora de creación del registro
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- Fecha y hora de la última actualización del registro
     active BOOLEAN DEFAULT TRUE NOT NULL -- Estado de la facción
@@ -9,7 +9,7 @@ CREATE TABLE faction (
 
 COMMENT ON TABLE faction IS 'Tabla que almacena información sobre las facciones.';
 COMMENT ON COLUMN faction.code IS 'Código único de la facción.';
-COMMENT ON COLUMN faction.name IS 'Nombre de la facción.';
+COMMENT ON COLUMN faction.description IS 'Nombre de la facción.';
 
 ----
 

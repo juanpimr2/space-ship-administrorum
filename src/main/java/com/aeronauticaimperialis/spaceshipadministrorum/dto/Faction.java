@@ -18,7 +18,7 @@ public class Faction {
     @Id
     @NotBlank
     private String code; // Código de la facción (clave primaria y único)
-    private String name; // Nombre de la facción
+    private String description; // Descripcion de la facción
     @Column(name = "created_at")
     private LocalDateTime createdAt;
     @Column(name = "updated_at")

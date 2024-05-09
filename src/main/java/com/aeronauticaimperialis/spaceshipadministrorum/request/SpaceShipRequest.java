@@ -1,6 +1,5 @@
 package com.aeronauticaimperialis.spaceshipadministrorum.request;
 
-import com.aeronauticaimperialis.spaceshipadministrorum.enums.FactionEnum;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -11,7 +10,7 @@ public class SpaceShipRequest {
     private String name; // Nombre de la nave
 
     @NotNull
-    private FactionEnum faction; // Facción de la nave
+    private String faction; // Facción de la nave
     
     @NotBlank
     private String description; // Descripción de la nave

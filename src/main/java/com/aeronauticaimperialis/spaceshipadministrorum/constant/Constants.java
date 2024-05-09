@@ -1,7 +1,5 @@
 package com.aeronauticaimperialis.spaceshipadministrorum.constant;
 
-import com.aeronauticaimperialis.spaceshipadministrorum.enums.AuditTypes;
-
 public class Constants {
   
   // Roles

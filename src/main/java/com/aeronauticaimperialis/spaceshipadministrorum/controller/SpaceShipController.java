@@ -1,10 +1,10 @@
 package com.aeronauticaimperialis.spaceshipadministrorum.controller;
 
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,7 +22,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 @RequestMapping("/spaceships")
 public class SpaceShipController {
     
-    @Autowired
     private SpaceShipService spaceShipService;
 
 
@@ -45,5 +44,26 @@ public class SpaceShipController {
     @PostMapping(value = "/create", produces = "application/json")
     public ResponseEntity<SpaceShipResponse> createSpaceShip(@RequestBody SpaceShipRequest spaceShip) {
         return spaceShipService.createSpaceShipTask(spaceShip);
+    }
+    
+    @Operation(summary = "Obtener una nave espacial por su ID", description = "Obtiene una nave espacial por su ID.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Operación exitosa"),
+            @ApiResponse(responseCode = "404", description = "Nave espacial no encontrada"),
+            @ApiResponse(responseCode = "500", description = "Error interno del servidor")
+    })
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<SpaceShipResponse> getSpaceShipById(@PathVariable Long id) {
+        return spaceShipService.getSpaceShipById(id);
+    }
+    
+    @Operation(summary = "Consultar naves por nombre", description = "Obtiene todas las naves cuyo nombre contiene el valor proporcionado.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Operación exitosa"),
+            @ApiResponse(responseCode = "400", description = "Parámetro inválido")
+    })
+    @GetMapping(value = "/search")
+    public ResponseEntity<List<SpaceShipResponse>> searchSpaceShipsByName(@RequestParam String name) {
+        return spaceShipService.searchSpaceShipsByName(name);
     }
 }

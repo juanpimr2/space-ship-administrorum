@@ -1,6 +1,5 @@
 package com.aeronauticaimperialis.spaceshipadministrorum.dto;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
