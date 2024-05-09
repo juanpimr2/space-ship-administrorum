@@ -1,15 +1,17 @@
 package com.aeronauticaimperialis.spaceshipadministrorum.config;
 
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import javax.sql.DataSource;
 import org.flywaydb.core.Flyway;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 @Configuration
 public class FlywayConfig {
 
     @Bean
+    @Profile("!test")
     public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName("org.postgresql.Driver");
@@ -20,6 +22,7 @@ public class FlywayConfig {
     }
 
     @Bean(initMethod = "migrate")
+    @Profile("!test")
     public Flyway flyway() {
         return Flyway.configure()
                 .dataSource(dataSource())

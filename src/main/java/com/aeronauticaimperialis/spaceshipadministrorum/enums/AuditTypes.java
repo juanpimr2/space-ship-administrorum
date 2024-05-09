@@ -7,9 +7,9 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum AuditTypes {
     CREATE_USER("Creación Usuario", "CU"),
-    CREATE_SHIP("Creación Nave", "CN"),
-    MOD_NAVE("Modificación Nave", "MN"),
-    DEL_NAVE("Borrado de Nave", "BN");
+    CREATE_SPACE_SHIP("Creación de Nave Espacial", "CNE"),
+    MOD_NAVE("Modificación Nave *HEREJIA*", "MNE"),
+    DEL_NAVE("Borrado de Nave es un deber vengarla", "BNE");
 
     private final String description;
     private final String type;

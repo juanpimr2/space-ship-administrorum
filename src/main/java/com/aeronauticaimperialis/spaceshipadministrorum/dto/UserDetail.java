@@ -1,5 +1,8 @@
-package com.aeronauticaimperialis.spaceshipadministrorum.model;
+package com.aeronauticaimperialis.spaceshipadministrorum.dto;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -15,4 +18,9 @@ public class UserDetail {
   private String username;
   private String password;
   private String role;
+  @Column(name = "created_at")
+  private LocalDateTime createdAt;
+  @Column(name = "updated_at")
+  private LocalDateTime updatedAt;
+  private Boolean active;
 }

@@ -1,4 +1,4 @@
-# Usa una imagen de OpenJDK 11 como base
+# Usa una imagen de OpenJDK 21 como base
 FROM openjdk:21
 
 # Establece el directorio de trabajo dentro del contenedor
