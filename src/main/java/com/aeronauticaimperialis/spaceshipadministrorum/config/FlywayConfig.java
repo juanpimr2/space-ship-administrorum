@@ -15,9 +15,9 @@ public class FlywayConfig {
     public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName("org.postgresql.Driver");
-        dataSource.setUrl("jdbc:postgresql://db:5432/mydatabase");
-        dataSource.setUsername("myuser");
-        dataSource.setPassword("mypassword");
+        dataSource.setUrl("jdbc:postgresql://db:5432/imperialisdb");
+        dataSource.setUsername("adeptusCustode");
+        dataSource.setPassword("praiseTheEmperor");
         return dataSource;
     }
 
