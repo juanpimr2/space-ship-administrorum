@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.BeanUtils;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -37,7 +36,6 @@ public class FactionService {
     return factionOptional.orElseThrow(() -> new FactionNotFoundException("Facción no encontrada con el código: " + factionCode));
   }
 
-  @Cacheable(value = "getAllFactions", condition = "#pageSize > 5")
   public ResponseEntity<List<FactionResponse>> getAllFactions(int pageNumber, int pageSize) {
     try {
       log.info("Iniciando getAllSpaceShip");

@@ -33,6 +33,7 @@ docker-compose up -d
 Para ver la aplicación, abre tu navegador web y ve a la siguiente URL:
 
 - [Swagger UI](http://localhost:8080/swagger-ui/index.html): Interfaz interactiva para probar los endpoints de la API.
+- **IMPORTANTE**: Se debe usar el endpoint login-endpoint /login con el fin de poder autenticarse y usar la API, este metodo no devuelve nada y termina con un 500 cuando va bien ya que intenta redireccionar y esa redireccion no la implemente, podeis confirmar que funciona intentando acceder con usuario y contraseña que no existan o incorrectos
 
 ### 5. Acceder a Kafka
 

@@ -73,7 +73,6 @@ public class SpaceShipService {
     }
 
     
-    @Cacheable(value = "getAllShips", condition = "#pageSize > 5")
     public ResponseEntity<List<SpaceShipResponse>> getAllSpaceShip(int pageNumber, int pageSize) {
       try {
         log.info("Iniciando getAllSpaceShip");
@@ -99,6 +98,7 @@ public class SpaceShipService {
     }
     
  // Método para obtener una nave espacial por su ID
+    @Cacheable(value = "spaceShipCache", key = "#id")
     public ResponseEntity<SpaceShipResponse> getSpaceShipById(Long id) {
         try {
             log.info("Iniciando getSpaceShipById para el ID: {}", id);
@@ -123,6 +123,7 @@ public class SpaceShipService {
             throw new SpaceShipServiceException("Error al obtener la nave espacial con ID: " + id + " error: " + e );
         }
     }
+    
     
     public ResponseEntity<List<SpaceShipResponse>> searchSpaceShipsByName(String name) {
       try {
