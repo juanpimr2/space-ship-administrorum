@@ -8,19 +8,19 @@ volumes:
 services:
    db:
       image: postgres:latest
-      container_name: my_postgres_db
+      container_name: Imperialisdb
       ports:
       - 5432:5432
       environment:
-         POSTGRES_USER: myuser
-         POSTGRES_PASSWORD: mypassword
-         POSTGRES_DB: mydatabase
+         POSTGRES_USER: adeptusCustode
+         POSTGRES_PASSWORD: praiseTheEmperor
+         POSTGRES_DB: imperialisdb
       volumes:
       - pgdata:/var/lib/postgresql/data
 
    app:
       build: .
-      container_name: my_spring_boot_app
+      container_name: Aeronautica_Imperialis_Spaceship_Administrorum
       ports:
       - 8080:8080
       depends_on: 

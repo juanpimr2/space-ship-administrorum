@@ -1,7 +1,6 @@
 package com.aeronauticaimperialis.spaceshipadministrorum.service;
 
 import java.util.concurrent.CompletableFuture;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
@@ -12,9 +11,12 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Slf4j
 public class AuditService {
-
-    @Autowired
+  
     private KafkaTemplate<String,Object> template;
+    
+    public AuditService(KafkaTemplate<String, Object> template) {
+      this.template = template;
+    }
 
     public void enviarMensajeDeAuditoria(String topic, String key, AuditMessage auditMessage) {
       try {

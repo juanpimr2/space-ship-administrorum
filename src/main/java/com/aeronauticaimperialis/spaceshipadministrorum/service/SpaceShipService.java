@@ -3,8 +3,6 @@ package com.aeronauticaimperialis.spaceshipadministrorum.service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -15,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.aeronauticaimperialis.spaceshipadministrorum.constant.Constants;
 import com.aeronauticaimperialis.spaceshipadministrorum.dto.SpaceShip;
 import com.aeronauticaimperialis.spaceshipadministrorum.exception.SpaceShipNotFoundException;
 import com.aeronauticaimperialis.spaceshipadministrorum.exception.SpaceShipServiceException;
@@ -26,8 +25,9 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Slf4j
 public class SpaceShipService {
+  
+  
 
-    private static final Logger REGISTRO = LoggerFactory.getLogger(SpaceShipService.class);
 
     private final SpaceShipRepository spaceShipRepository;
     private final FactionService factionService;
@@ -66,14 +66,14 @@ public class SpaceShipService {
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             // Registrar error
-            REGISTRO.error("Se produjo un error al crear la nave espacial: {}", e.getMessage());
+            log.error("Se produjo un error al crear la nave espacial: {}", e.getMessage());
             // Devolver ResponseEntity con estado de error
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
     
-    @Cacheable(cacheNames = "getAllShips", condition = "#pageSize > 5")
+    @Cacheable(value = "getAllShips", condition = "#pageSize > 5")
     public ResponseEntity<List<SpaceShipResponse>> getAllSpaceShip(int pageNumber, int pageSize) {
       try {
         log.info("Iniciando getAllSpaceShip");
@@ -114,9 +114,8 @@ public class SpaceShipService {
                 // Devolver ResponseEntity con estado de éxito y detalles de la nave espacial
                 return ResponseEntity.ok(response);
             } else {
-                log.warn("Nave espacial con ID {} no encontrada", id);
                 // Lanzar excepción SpaceShipNotFoundException si la nave espacial no se encuentra
-                throw new SpaceShipNotFoundException("Nave espacial con ID " + id + " no encontrada");
+                throw new SpaceShipNotFoundException(String.format(Constants.SHIP_BY_ID_NOT_FOUND, id));
             }
         } catch (Exception e) {
             log.error("Error al obtener la nave espacial con ID {}: {}", id, e.getMessage());
@@ -149,13 +148,14 @@ public class SpaceShipService {
                 SpaceShip spaceShip = optionalSpaceShip.get();
                 BeanUtils.copyProperties(spaceShipRequest, spaceShip);
                 spaceShip.setFaction(factionService.getFactionByCode(spaceShipRequest.getFaction()));
+                spaceShip.setUpdatedAt(LocalDateTime.now());
                 SpaceShip updatedSpaceShip = spaceShipRepository.save(spaceShip);
                 SpaceShipResponse response = mapSpaceShipToSpaceShipResponse(updatedSpaceShip);
                 log.info("Nave espacial actualizada: {}", response);
                 return ResponseEntity.ok(response);
             } else {
                 log.warn("Nave espacial con ID {} no encontrada", id);
-                throw new SpaceShipNotFoundException("Nave espacial con ID " + id + " no encontrada");
+                throw new SpaceShipNotFoundException(String.format(Constants.SHIP_BY_ID_NOT_FOUND, id));
             }
         } catch (Exception e) {
             log.error("Error al actualizar la nave espacial con ID {}: {}", id, e.getMessage());
@@ -174,7 +174,7 @@ public class SpaceShipService {
                 return ResponseEntity.noContent().build();
             } else {
                 log.warn("Nave espacial con ID {} no encontrada", id);
-                throw new SpaceShipNotFoundException("Nave espacial con ID " + id + " no encontrada");
+                throw new SpaceShipNotFoundException(String.format(Constants.SHIP_BY_ID_NOT_FOUND, id));
             }
         } catch (Exception e) {
             log.error("Error al eliminar la nave espacial con ID {}: {}", id, e.getMessage());

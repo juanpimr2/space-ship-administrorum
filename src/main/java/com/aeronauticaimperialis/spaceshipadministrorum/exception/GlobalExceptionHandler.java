@@ -10,10 +10,22 @@ import org.springframework.web.context.request.WebRequest;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(SpaceShipNotFoundException.class)
-    public ResponseEntity<Object> handleCustomException(SpaceShipNotFoundException ex, WebRequest request) {
+    @ExceptionHandler(SpaceShipServiceException.class)
+    public ResponseEntity<Object> handleCustomException(SpaceShipServiceException ex, WebRequest request) {
         ErrorResponse errorResponse = new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
         return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+    
+    @ExceptionHandler(SpaceShipNotFoundException.class)
+    public ResponseEntity<Object> handleCustomException(SpaceShipNotFoundException ex, WebRequest request) {
+        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.NOT_FOUND, ex.getMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    }
+    
+    @ExceptionHandler(UserAlreadyExistsException.class)
+    public ResponseEntity<Object> handleCustomException(UserAlreadyExistsException ex, WebRequest request) {
+        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
     
     @ExceptionHandler(EmptyUserNameOnRequest.class)

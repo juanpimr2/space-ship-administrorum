@@ -2,6 +2,13 @@ package com.aeronauticaimperialis.spaceshipadministrorum.constant;
 
 public class Constants {
   
+  
+  
+  private Constants() {
+    super();
+  }
+
+
   // Roles
   public static final String USER_ROLE = "USER";
   public static final String ADMIN_ROLE = "ADMIN";
@@ -17,5 +24,9 @@ public class Constants {
   // Mensajes de creación de nave para KAFKA
   public static final String CREATING_SPACE_SHIP_MESSAGE = "Creación de nave %s, sirviendo al bando: %s";
   
+  
+  //Errores
+  
+  public static final String SHIP_BY_ID_NOT_FOUND = "Nave espacial con ID %s no encontrada";
 
 }

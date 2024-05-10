@@ -37,7 +37,7 @@ public class FactionService {
     return factionOptional.orElseThrow(() -> new FactionNotFoundException("Facción no encontrada con el código: " + factionCode));
   }
 
-  @Cacheable(cacheNames = "getAllFactions", condition = "#pageSize > 5")
+  @Cacheable(value = "getAllFactions", condition = "#pageSize > 5")
   public ResponseEntity<List<FactionResponse>> getAllFactions(int pageNumber, int pageSize) {
     try {
       log.info("Iniciando getAllSpaceShip");

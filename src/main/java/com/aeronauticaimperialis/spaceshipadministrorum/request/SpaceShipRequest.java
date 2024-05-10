@@ -8,12 +8,14 @@ import lombok.Data;
 @Data
 public class SpaceShipRequest {
     @NotBlank
-    private String name; // Nombre de la nave
+    @Schema(description = "Nombre de la nave", example = "X-WING")
+    private String name;
 
     @NotNull
-    @Schema(description = "Facción de la nave", required = true, allowableValues = {"IP", "CH", "EL", "ORKS", "NE"}, example = "IP")
-    private String faction; // Facción de la nave
+    @Schema(description = "Codigo de la faccion, normalmente representado por las iniciales de la misma", allowableValues = {"IP", "CH", "EL", "ORKS", "NE"}, example = "IP")
+    private String faction; 
     
     @NotBlank
-    private String description; // Descripción de la nave
+    @Schema(description = "Descripcion de nave ", example = "Nave insignia de combate de los pilotos dentro de las flotas Rebeldes... molan! tienen unidades R2's y sus alas forma de X!!")
+    private String description; 
 }
