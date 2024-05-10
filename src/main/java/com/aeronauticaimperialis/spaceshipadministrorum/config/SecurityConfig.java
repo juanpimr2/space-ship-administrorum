@@ -1,9 +1,7 @@
 package com.aeronauticaimperialis.spaceshipadministrorum.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -19,11 +17,15 @@ import com.aeronauticaimperialis.spaceshipadministrorum.service.UserDetailServic
 @EnableWebSecurity
 public class SecurityConfig {
   
-  @Autowired
   private UserDetailService userDetailService; // Inyección del servicio
+  
+  
+    public SecurityConfig(UserDetailService userDetailService) {
+    this.userDetailService = userDetailService;
+  }
 
-  @Bean
-  public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+    @Bean
+    SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
       return httpSecurity
               .csrf(AbstractHttpConfigurer::disable)
               .authorizeHttpRequests(registry -> {
@@ -37,7 +39,7 @@ public class SecurityConfig {
   }
 
     @Bean
-    public AuthenticationProvider authenticationProvider() {
+    AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setUserDetailsService(userDetailService); // Usar el servicio inyectado
         provider.setPasswordEncoder(passwordEncoder());
@@ -45,8 +47,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    @Lazy
-    public PasswordEncoder  passwordEncoder(){
+    PasswordEncoder  passwordEncoder(){
         return new BCryptPasswordEncoder();
     }
 }

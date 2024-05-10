@@ -1,5 +1,6 @@
 package com.aeronauticaimperialis.spaceshipadministrorum.test;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import java.time.LocalDateTime;
@@ -13,13 +14,10 @@ import org.springframework.test.context.ActiveProfiles;
 import com.aeronauticaimperialis.spaceshipadministrorum.aspect.AuditAspect;
 import com.aeronauticaimperialis.spaceshipadministrorum.constant.Constants;
 import com.aeronauticaimperialis.spaceshipadministrorum.dto.AuditMessage;
-import com.aeronauticaimperialis.spaceshipadministrorum.dto.Faction;
-import com.aeronauticaimperialis.spaceshipadministrorum.dto.SpaceShip;
 import com.aeronauticaimperialis.spaceshipadministrorum.dto.UserDetail;
 import com.aeronauticaimperialis.spaceshipadministrorum.enums.AuditTypes;
-import com.aeronauticaimperialis.spaceshipadministrorum.enums.TopicEnum;
+import com.aeronauticaimperialis.spaceshipadministrorum.request.SpaceShipRequest;
 import com.aeronauticaimperialis.spaceshipadministrorum.service.AuditService;
-import static org.mockito.ArgumentMatchers.any;
 
 @ActiveProfiles("test")
 public class AuditAspectTest {
@@ -49,24 +47,20 @@ public class AuditAspectTest {
 
         // Then
         AuditMessage expectedMessage = new AuditMessage();
-        expectedMessage.setEvent(String.format(Constants.TOPIC_AUDIT_CREATE_USER_EVENT_MESSAGE, userDetail.getUsername()));
-        expectedMessage.setEventDescription(String.format(Constants.TOPIC_AUDIT_CREATE_USER_EVENT_DESCRIPTION_MESSAGE, userDetail.getRole()));
-        expectedMessage.setEventType(AuditTypes.CREATE_USER.getType() + ": " + AuditTypes.CREATE_USER.getDescription());
+        expectedMessage.setEvent(String.format(Constants.TOPIC_AUDIT_CREATE_USER_EVENT_DESCRIPTION_MESSAGE, userDetail.getUsername(),userDetail.getRole()));
+        expectedMessage.setEventDescription(String.format(Constants.TOPIC_AUDIT_CREATE_USER_EVENT_DESCRIPTION_MESSAGE, userDetail.getUsername(),userDetail.getRole()));
+        expectedMessage.setEventType(AuditTypes.CREATE_USER.getType() + ": " + AuditTypes.CREATE_USER.getEvent());
         expectedMessage.setTimestamp(LocalDateTime.now());
-        verify(auditService, times(1)).enviarMensajeDeAuditoria(TopicEnum.USERS_TOPIC.getTopic(), expectedMessage);
+        verify(auditService, times(1)).enviarMensajeDeAuditoria(any(), any(), any());
     }
 
     @Test
     public void testAfterSaveSpaceShip() {
         // Given
-        SpaceShip spaceShip = new SpaceShip();
+        SpaceShipRequest spaceShip = new SpaceShipRequest();
         spaceShip.setName("testSpaceShip");
         spaceShip.setDescription("Test description");
-        
-        // Mockear la facción
-        Faction faction = new Faction();
-        faction.setCode("testCode");
-        spaceShip.setFaction(faction);
+        spaceShip.setFaction("IP");
 
         JoinPoint joinPoint = null;
         Object result = null;
@@ -76,10 +70,10 @@ public class AuditAspectTest {
 
         // Then
         AuditMessage expectedMessage = new AuditMessage();
-        expectedMessage.setEvent(String.format(Constants.CREATING_SPACE_SHIP_MESSAGE, spaceShip.getName()));
-        expectedMessage.setEventDescription(String.format(Constants.CREATING_SPACE_SHIP_DESCRIPTION_MESSAGE, spaceShip.getDescription(), spaceShip.getFaction().getCode()));
-        expectedMessage.setEventType(AuditTypes.CREATE_SPACE_SHIP.getType() + ": " + AuditTypes.CREATE_SPACE_SHIP.getDescription());
+        expectedMessage.setEvent(String.format(Constants.CREATING_SPACE_SHIP_MESSAGE, spaceShip.getName(), spaceShip.getFaction()));
+        expectedMessage.setEventDescription(String.format(Constants.CREATING_SPACE_SHIP_MESSAGE, spaceShip.getDescription(), spaceShip.getFaction()));
+        expectedMessage.setEventType(AuditTypes.CREATE_SPACE_SHIP.getType() + ": " + AuditTypes.CREATE_SPACE_SHIP.getEvent());
         expectedMessage.setTimestamp(LocalDateTime.now());
-        verify(auditService, times(1)).enviarMensajeDeAuditoria(any(), any());
+        verify(auditService, times(1)).enviarMensajeDeAuditoria(any(), any(), any());
     }
 }

@@ -12,12 +12,10 @@ public class Constants {
   public static final String WELCOME_ADMIN_MESSAGE = "¡Oh venerado %s, líder incuestionable de nuestras huestes! Que la luz del Emperador ilumine cada uno de tus pasos en esta vasta galaxia.";
   
   // Mensajes de auditoría de usuarios para KAFKA
-  public static final String TOPIC_AUDIT_CREATE_USER_EVENT_MESSAGE = "Creacion de usuario %s";
-  public static final String TOPIC_AUDIT_CREATE_USER_EVENT_DESCRIPTION_MESSAGE = "Creado con rol : %s";
+  public static final String TOPIC_AUDIT_CREATE_USER_EVENT_DESCRIPTION_MESSAGE = "Creado usuario %s, con rol : %s";
   
   // Mensajes de creación de nave para KAFKA
-  public static final String CREATING_SPACE_SHIP_MESSAGE = "Creación de nave %s, exitoso.";
-  public static final String CREATING_SPACE_SHIP_DESCRIPTION_MESSAGE = "Cumpliendo con la siguiente descripción: %s \n y sirviendo al bando: %s";
+  public static final String CREATING_SPACE_SHIP_MESSAGE = "Creación de nave %s, sirviendo al bando: %s";
   
 
 }

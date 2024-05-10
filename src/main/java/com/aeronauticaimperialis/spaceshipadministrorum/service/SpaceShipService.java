@@ -2,9 +2,12 @@ package com.aeronauticaimperialis.spaceshipadministrorum.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -43,7 +46,6 @@ public class SpaceShipService {
     @Transactional
     public ResponseEntity<SpaceShipResponse> createSpaceShipTask(SpaceShipRequest solicitudNaveEspacial) {
         try {
-          
             log.info("Empezando createSpaceShipTask(SpaceShipRequest solicitudNaveEspacial) || solicitudNaveEspacial: {}", solicitudNaveEspacial);
             SpaceShip spaceShip = new SpaceShip();
             // Copiar propiedades de la solicitud a la entidad
@@ -70,15 +72,13 @@ public class SpaceShipService {
         }
     }
 
-
+    
+    @Cacheable(cacheNames = "getAllShips", condition = "#pageSize > 5")
     public ResponseEntity<List<SpaceShipResponse>> getAllSpaceShip(int pageNumber, int pageSize) {
       try {
         log.info("Iniciando getAllSpaceShip");
-          // Configurar la paginación y ordenamiento
           Pageable pageable = PageRequest.of(pageNumber, pageSize);
-          // Obtener la página de naves espaciales
           Page<SpaceShip> spaceShipPage = spaceShipRepository.findAll(pageable);
-          // Mapear la página de naves espaciales a una lista de respuestas
           List<SpaceShipResponse> spaceShipResponses = spaceShipPage.getContent().stream()
                   .map(spaceShip -> {
                       log.info("Mapeando: {}", spaceShip);
@@ -92,7 +92,7 @@ public class SpaceShipService {
           log.info("Finalizando getAllSpaceShip");
           return ResponseEntity.ok(spaceShipResponses);
       } catch (Exception e) {
-        log.error("Error: {}", e);
+        log.info("Error: {}", e);
         log.info("Finalizando getAllSpaceShip");
           return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
       }
@@ -139,6 +139,48 @@ public class SpaceShipService {
           throw new SpaceShipServiceException("Error al buscar naves espaciales por nombre, error: " + e);
       }
   }
+    
+    @Transactional
+    public ResponseEntity<SpaceShipResponse> updateSpaceShip(Long id, SpaceShipRequest spaceShipRequest) {
+        try {
+            log.info("Iniciando updateSpaceShip para el ID: {}", id);
+            Optional<SpaceShip> optionalSpaceShip = spaceShipRepository.findById(id);
+            if (optionalSpaceShip.isPresent()) {
+                SpaceShip spaceShip = optionalSpaceShip.get();
+                BeanUtils.copyProperties(spaceShipRequest, spaceShip);
+                spaceShip.setFaction(factionService.getFactionByCode(spaceShipRequest.getFaction()));
+                SpaceShip updatedSpaceShip = spaceShipRepository.save(spaceShip);
+                SpaceShipResponse response = mapSpaceShipToSpaceShipResponse(updatedSpaceShip);
+                log.info("Nave espacial actualizada: {}", response);
+                return ResponseEntity.ok(response);
+            } else {
+                log.warn("Nave espacial con ID {} no encontrada", id);
+                throw new SpaceShipNotFoundException("Nave espacial con ID " + id + " no encontrada");
+            }
+        } catch (Exception e) {
+            log.error("Error al actualizar la nave espacial con ID {}: {}", id, e.getMessage());
+            throw new SpaceShipServiceException("Error al actualizar la nave espacial con ID: " + id + ". Error: " + e);
+        }
+    }
+
+    @Transactional
+    public ResponseEntity<Void> deleteSpaceShip(Long id) {
+        try {
+            log.info("Iniciando deleteSpaceShip para el ID: {}", id);
+            Optional<SpaceShip> optionalSpaceShip = spaceShipRepository.findById(id);
+            if (optionalSpaceShip.isPresent()) {
+                spaceShipRepository.deleteById(id);
+                log.info("Nave espacial con ID {} eliminada correctamente", id);
+                return ResponseEntity.noContent().build();
+            } else {
+                log.warn("Nave espacial con ID {} no encontrada", id);
+                throw new SpaceShipNotFoundException("Nave espacial con ID " + id + " no encontrada");
+            }
+        } catch (Exception e) {
+            log.error("Error al eliminar la nave espacial con ID {}: {}", id, e.getMessage());
+            throw new SpaceShipServiceException("Error al eliminar la nave espacial con ID: " + id + ". Error: " + e);
+        }
+    }
 
   private SpaceShipResponse mapSpaceShipToSpaceShipResponse(SpaceShip spaceShip) {
       SpaceShipResponse response = new SpaceShipResponse();
@@ -147,5 +189,11 @@ public class SpaceShipService {
       response.setDescription(spaceShip.getDescription());
       response.setFaction(spaceShip.getFaction().getDescription());
       return response;
+  }
+  
+  
+  @CacheEvict(cacheNames = { "getAllShips" }, allEntries = true)
+  public void clearCache() {
+      log.info("Clear Cache...");
   }
 }

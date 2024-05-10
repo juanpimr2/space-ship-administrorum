@@ -16,12 +16,12 @@ public class AuditService {
     @Autowired
     private KafkaTemplate<String,Object> template;
 
-    public void enviarMensajeDeAuditoria(String topic, AuditMessage auditMessage) {
+    public void enviarMensajeDeAuditoria(String topic, String key, AuditMessage auditMessage) {
       try {
-        CompletableFuture<SendResult<String, Object>> future = template.send(topic, auditMessage);
+        CompletableFuture<SendResult<String, Object>> future = template.send(topic, key, auditMessage);
         future.whenComplete((result, ex) -> {
             if (ex == null) {
-                log.info("Sent message=[ {} ] with offset=[ {} ]", auditMessage.toString() , result.getRecordMetadata().offset());
+                log.info("Sent message=[ {} ] with offset=[ {} ]", auditMessage.toString(), result.getRecordMetadata().offset());
             } else {
               log.info("Unable to send message=[ {} ] due to : {}", 
                   auditMessage.toString(), ex.getMessage());
@@ -37,8 +37,4 @@ public class AuditService {
     public void listen(AuditMessage auditMessage) {
       log.info("consumer consume the events {} ", auditMessage.toString());
     }
-    
-
-
-
 }

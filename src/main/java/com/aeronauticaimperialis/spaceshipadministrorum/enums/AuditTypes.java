@@ -6,11 +6,13 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum AuditTypes {
-    CREATE_USER("Creación Usuario", "CU"),
-    CREATE_SPACE_SHIP("Creación de Nave Espacial", "CNE"),
-    MOD_NAVE("Modificación Nave *HEREJIA*", "MNE"),
-    DEL_NAVE("Borrado de Nave es un deber vengarla", "BNE");
+    CREATE_USER( "ALTA","Creación de Usuario"),
+    CREATE_SPACE_SHIP("ALTA", "Creación de Nave Espacial"),
+    MODIFY_SPACE_SHIP("MOD", "Modificación de Nave Espacial"),
+    DELETE_SPACE_SHIP("BAJA", "Borrado de Nave Espacial"),
+    GET_SPACE_SHIP("CON", "Consultado de Nave Espacial");
 
-    private final String description;
     private final String type;
+    private final String event;
+
 }
