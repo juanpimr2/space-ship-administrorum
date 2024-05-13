@@ -26,9 +26,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class SpaceShipService {
   
-  
-
-
     private final SpaceShipRepository spaceShipRepository;
     private final FactionService factionService;
 
@@ -140,7 +137,6 @@ public class SpaceShipService {
       }
   }
     
-    @Transactional
     public ResponseEntity<SpaceShipResponse> updateSpaceShip(Long id, SpaceShipRequest spaceShipRequest) {
         try {
             log.info("Iniciando updateSpaceShip para el ID: {}", id);
@@ -164,7 +160,6 @@ public class SpaceShipService {
         }
     }
 
-    @Transactional
     public ResponseEntity<Void> deleteSpaceShip(Long id) {
         try {
             log.info("Iniciando deleteSpaceShip para el ID: {}", id);
@@ -193,8 +188,8 @@ public class SpaceShipService {
   }
   
   
-  @CacheEvict(cacheNames = { "getAllShips" }, allEntries = true)
+  @CacheEvict(value = "spaceShipCache", allEntries = true)
   public void clearCache() {
-      log.info("Clear Cache...");
+      log.info("Limpiando Cache...");
   }
 }

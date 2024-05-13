@@ -87,6 +87,7 @@ public class AuditAspect {
     auditService.enviarMensajeDeAuditoria(TopicEnum.SPACE_SHIP_TOPIC.getTopic(),
         getCurrentUsername(),
         buildAuditMessage(AuditTypes.MODIFY_SPACE_SHIP, "Modificando nave con ID: " + id));
+    
   }
 
   // Metodo para después de la operación de borrado de una nave espacial

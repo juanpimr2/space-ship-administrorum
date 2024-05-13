@@ -19,15 +19,11 @@ public class SpaceShip {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String name; // Nombre de la nave
-    
     @ManyToOne
     @JoinColumn(name = "faction_code", referencedColumnName = "code")
     private Faction faction; // Facción de la nave
-
     private String description; // Descripción de la nave
-
     @Column(name = "created_at")
     private LocalDateTime createdAt;
     @Column(name = "updated_at")

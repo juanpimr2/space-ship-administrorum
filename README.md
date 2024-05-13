@@ -40,6 +40,7 @@ Para ver la aplicación, abre tu navegador web y ve a la siguiente URL:
 Si deseas ver los topics de Kafka, puedes acceder a la siguiente URL:
 
 - [Kafka Control Center](http://localhost:8090/): Control center para visualizar y administrar los topics de Kafka.
+- Se he creado un sistema de auditoria donde se registra como Key del mensaje el usuario autor de la accion y en el valor del mensaje se encuentra el cuerpo de un objeto con varios campos referentes a la accion que ha realizado la persona
 
 ### 6. Conectar a la base de datos
 

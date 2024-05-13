@@ -12,7 +12,7 @@ public class FlywayConfig {
 
     @Bean
     @Profile("!test")
-    public DataSource dataSource() {
+    DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName("org.postgresql.Driver");
         dataSource.setUrl("jdbc:postgresql://db:5432/imperialisdb");
@@ -23,7 +23,7 @@ public class FlywayConfig {
 
     @Bean(initMethod = "migrate")
     @Profile("!test")
-    public Flyway flyway() {
+    Flyway flyway() {
         return Flyway.configure()
                 .dataSource(dataSource())
                 .locations("classpath:db/migration")

@@ -5,7 +5,7 @@ FROM openjdk:21
 WORKDIR /app
 
 # Copia el archivo JAR de la aplicación al contenedor
-COPY target/space-ship-admistrorum-0.0.1-SNAPSHOT.jar /app/app.jar
+COPY target/space-ship-administrorum-0.0.1-SNAPSHOT.jar /app/app.jar
 
 # Expone el puerto 8080 en el contenedor
 EXPOSE 8080

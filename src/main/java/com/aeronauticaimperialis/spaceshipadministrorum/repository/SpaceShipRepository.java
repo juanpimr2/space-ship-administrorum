@@ -7,4 +7,5 @@ import com.aeronauticaimperialis.spaceshipadministrorum.dto.SpaceShip;
 public interface SpaceShipRepository extends JpaRepository<SpaceShip, Long> {
 
   List<SpaceShip> findByNameContainingIgnoreCase(String name);
+  
 }
