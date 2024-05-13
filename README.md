@@ -1,6 +1,6 @@
 # space-ship-administrorum
 
-Un sistema simple de gestión de naves espaciales para el Imperio del Hombre.
+Un sistema simple de gestión de naves espaciales para el Imperio de la humanidad.
 
 ## Instrucciones de instalación
 
