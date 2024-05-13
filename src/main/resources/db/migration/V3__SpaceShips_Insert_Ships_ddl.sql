@@ -20,7 +20,7 @@ VALUES
 -- Inserts de naves para la facción "Chaos"
 INSERT INTO space_ship (name, faction_code, description) 
 VALUES 
-('Chaos Warhound Titan', 'CH', 'Versión corrupta del Warhound Titan, usado por los Seguidores del Caos.'),
+('The Treacherous', 'CH', 'Acorazado de clase profanadora y buque insignia del maestro de guerra Heinrich Bale.'),
 ('Hell Talon Fighter-Bomber', 'CH', 'Caza-bombardero ágil y letal utilizado por las fuerzas del Caos.'),
 ('Despoiler-class Battleship', 'CH', 'Nave de batalla corrupta y retorcida, símbolo de la flota del Caos.'),
 ('Conqueror', 'CH', 'Nave de batalla del Caos con armamento pesado y defensas avanzadas, líder de las flotas del Caos en la guerra espacial.'),
