@@ -31,6 +31,7 @@ public class AuditAspect {
   public AuditAspect(AuditService auditService) {
     this.auditService = auditService;
   }
+
   // Pointcut para la operación de guardado de usuario
   @Pointcut("execution(* com.aeronauticaimperialis.spaceshipadministrorum.repository.UserRepository.save(..)) && args(userDetail)")
   public void saveUserOperation(UserDetail userDetail) {}
@@ -42,7 +43,7 @@ public class AuditAspect {
   // Pointcut para la operación de modificación de una nave espacial
   @Pointcut("execution(* com.aeronauticaimperialis.spaceshipadministrorum.service.SpaceShipService.updateSpaceShip(..)) && args(id, spaceShipRequest)")
   public void updateSpaceShipPointcut(Long id, SpaceShipRequest spaceShipRequest) {}
-  
+
   // Pointcut para la operación de borrado de una nave espacial
   @Pointcut("execution(* com.aeronauticaimperialis.spaceshipadministrorum.service.SpaceShipService.deleteSpaceShip(..)) && args(id)")
   public void deleteSpaceShipPointcut(Long id) {}
@@ -59,7 +60,7 @@ public class AuditAspect {
   @Pointcut("execution(* com.aeronauticaimperialis.spaceshipadministrorum.service.SpaceShipService.searchSpaceShipsByName(..)) && args(name)")
   public void searchSpaceShipsByNamePointcut(String name) {}
 
-  
+
   // Metodo para después de la operación de guardado de usuario
   @AfterReturning(pointcut = "saveUserOperation(userDetail)", returning = "result")
   public void afterSaveUser(JoinPoint joinPoint, UserDetail userDetail, Object result) {
@@ -69,7 +70,7 @@ public class AuditAspect {
                 userDetail.getUsername(), userDetail.getRole())));
   }
 
-  
+
   // Metodo para después de la operación de creacion de una nave espacial
   @AfterReturning(pointcut = "saveSpaceShipOperation(spaceShip)", returning = "result")
   public void afterSaveSpaceShip(JoinPoint joinPoint, SpaceShipRequest spaceShip, Object result) {
@@ -87,7 +88,7 @@ public class AuditAspect {
     auditService.enviarMensajeDeAuditoria(TopicEnum.SPACE_SHIP_TOPIC.getTopic(),
         getCurrentUsername(),
         buildAuditMessage(AuditTypes.MODIFY_SPACE_SHIP, "Modificando nave con ID: " + id));
-    
+
   }
 
   // Metodo para después de la operación de borrado de una nave espacial
@@ -130,6 +131,7 @@ public class AuditAspect {
 
   /**
    * Obtiene el nombre de usuario actual desde el contexto de seguridad.
+   * 
    * @return El nombre de usuario actual.
    */
   private String getCurrentUsername() {
@@ -144,6 +146,7 @@ public class AuditAspect {
 
   /**
    * Construye un mensaje de auditoría.
+   * 
    * @param type Tipo de auditoría.
    * @param description Descripción de la auditoría.
    * @return El mensaje de auditoría construido.

@@ -3,7 +3,7 @@ CREATE TABLE faction (
     code VARCHAR(50) PRIMARY KEY, -- Código único de la facción
     description VARCHAR(200) NOT NULL, -- Nombre de la facción
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- Fecha y hora de creación del registro
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- Fecha y hora de la última actualización del registro
+    updated_at TIMESTAMP DEFAULT null, -- Fecha y hora de la última actualización del registro
     active BOOLEAN DEFAULT TRUE NOT NULL -- Estado de la facción
 );
 
@@ -19,7 +19,7 @@ CREATE TABLE space_ship (
     faction_code VARCHAR(50) NOT NULL, -- Código de la facción a la que pertenece la nave
     description VARCHAR(1000), -- Descripción detallada de la nave
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- Fecha y hora de creación del registro
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- Fecha y hora de la última actualización del registro
+    updated_at TIMESTAMP DEFAULT null, -- Fecha y hora de la última actualización del registro
     active BOOLEAN DEFAULT TRUE NOT NULL, -- Estado de la nave
     FOREIGN KEY (faction_code) REFERENCES faction(code) -- Clave foránea que referencia la facción a la que pertenece la nave
 );

@@ -20,7 +20,7 @@ import com.aeronauticaimperialis.spaceshipadministrorum.request.SpaceShipRequest
 import com.aeronauticaimperialis.spaceshipadministrorum.service.AuditService;
 
 @ActiveProfiles("test")
-public class AuditAspectTest {
+class AuditAspectTest {
 
     @Mock
     private AuditService auditService;
@@ -34,18 +34,15 @@ public class AuditAspectTest {
     }
 
     @Test
-    public void testAfterSaveUser() {
-        // Given
+    void testAfterSaveUser() {
         UserDetail userDetail = new UserDetail();
         userDetail.setUsername("testUser");
         userDetail.setRole("admin");
         JoinPoint joinPoint = null;
         Object result = null;
 
-        // When
         auditAspect.afterSaveUser(joinPoint, userDetail, result);
 
-        // Then
         AuditMessage expectedMessage = new AuditMessage();
         expectedMessage.setEvent(String.format(Constants.TOPIC_AUDIT_CREATE_USER_EVENT_DESCRIPTION_MESSAGE, userDetail.getUsername(),userDetail.getRole()));
         expectedMessage.setEventDescription(String.format(Constants.TOPIC_AUDIT_CREATE_USER_EVENT_DESCRIPTION_MESSAGE, userDetail.getUsername(),userDetail.getRole()));
@@ -55,7 +52,7 @@ public class AuditAspectTest {
     }
 
     @Test
-    public void testAfterSaveSpaceShip() {
+    void testAfterSaveSpaceShip() {
         // Given
         SpaceShipRequest spaceShip = new SpaceShipRequest();
         spaceShip.setName("testSpaceShip");
@@ -65,10 +62,8 @@ public class AuditAspectTest {
         JoinPoint joinPoint = null;
         Object result = null;
 
-        // When
         auditAspect.afterSaveSpaceShip(joinPoint, spaceShip, result);
 
-        // Then
         AuditMessage expectedMessage = new AuditMessage();
         expectedMessage.setEvent(String.format(Constants.CREATING_SPACE_SHIP_MESSAGE, spaceShip.getName(), spaceShip.getFaction()));
         expectedMessage.setEventDescription(String.format(Constants.CREATING_SPACE_SHIP_MESSAGE, spaceShip.getDescription(), spaceShip.getFaction()));

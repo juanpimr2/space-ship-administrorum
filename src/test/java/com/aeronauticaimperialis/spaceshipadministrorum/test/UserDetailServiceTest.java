@@ -45,10 +45,8 @@ class UserDetailServiceTest {
         when(userRepository.findByUsername(username)).thenReturn(Optional.of(userDetail));
         when(utilsImperatoris.getRoles(userDetail)).thenReturn(new String[] { Constants.USER_ROLE }); // Mocking the roles
 
-        // Act
         UserDetails userDetails = userDetailService.loadUserByUsername(username);
 
-        // Assert
         assertEquals(username, userDetails.getUsername());
         assertEquals(password, userDetails.getPassword());
         assertEquals(1, userDetails.getAuthorities().size());
@@ -57,11 +55,9 @@ class UserDetailServiceTest {
 
     @Test
     void testLoadUserByUsername_UserNotFound() {
-        // Arrange
         String username = "nonExistentUser";
         when(userRepository.findByUsername(username)).thenReturn(Optional.empty());
 
-        // Act/Assert
         UsernameNotFoundException exception = org.junit.jupiter.api.Assertions.assertThrows(
                 UsernameNotFoundException.class, () -> userDetailService.loadUserByUsername(username));
         assertEquals("nonExistentUser", exception.getMessage());

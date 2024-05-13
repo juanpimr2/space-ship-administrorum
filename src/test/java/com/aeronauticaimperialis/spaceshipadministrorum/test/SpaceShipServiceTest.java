@@ -18,62 +18,63 @@ import com.aeronauticaimperialis.spaceshipadministrorum.response.SpaceShipRespon
 import com.aeronauticaimperialis.spaceshipadministrorum.service.FactionService;
 import com.aeronauticaimperialis.spaceshipadministrorum.service.SpaceShipService;
 
-public class SpaceShipServiceTest {
+class SpaceShipServiceTest {
 
-    private SpaceShipService spaceShipService;
-    private SpaceShipRepository spaceShipRepositoryMock;
-    private FactionService factionServiceMock;
+  private SpaceShipService spaceShipService;
+  private SpaceShipRepository spaceShipRepositoryMock;
+  private FactionService factionServiceMock;
 
-    @BeforeEach
-    public void setUp() {
-        spaceShipRepositoryMock = mock(SpaceShipRepository.class);
-        factionServiceMock = mock(FactionService.class);
-        spaceShipService = new SpaceShipService(spaceShipRepositoryMock, factionServiceMock);
-    }
+  @BeforeEach
+  public void setUp() {
+    spaceShipRepositoryMock = mock(SpaceShipRepository.class);
+    factionServiceMock = mock(FactionService.class);
+    spaceShipService = new SpaceShipService(spaceShipRepositoryMock, factionServiceMock);
+  }
 
-    @Test
-    public void testCreateSpaceShipTask_Success() {
-        SpaceShipRequest request = new SpaceShipRequest();
-        request.setName("Test Ship");
-        request.setDescription("Test Description");
-        request.setFaction("Test Faction");
+  @Test
+  void testCreateSpaceShipTask_Success() {
+    SpaceShipRequest request = new SpaceShipRequest();
+    request.setName("Test Ship");
+    request.setDescription("Test Description");
+    request.setFaction("Test Faction");
 
-        Faction faction = new Faction();
-        faction.setCode("Test Faction");
-        faction.setDescription("Test Faction Description");
+    Faction faction = new Faction();
+    faction.setCode("Test Faction");
+    faction.setDescription("Test Faction Description");
 
-        when(factionServiceMock.getFactionByCode("Test Faction")).thenReturn(faction);
+    when(factionServiceMock.getFactionByCode("Test Faction")).thenReturn(faction);
 
-        SpaceShip spaceShip = new SpaceShip();
-        spaceShip.setId(1L);
-        spaceShip.setName("Test Ship");
-        spaceShip.setDescription("Test Description");
-        spaceShip.setFaction(faction);
-        spaceShip.setCreatedAt(LocalDateTime.now());
-        spaceShip.setActive(true);
+    SpaceShip spaceShip = new SpaceShip();
+    spaceShip.setId(1L);
+    spaceShip.setName("Test Ship");
+    spaceShip.setDescription("Test Description");
+    spaceShip.setFaction(faction);
+    spaceShip.setCreatedAt(LocalDateTime.now());
+    spaceShip.setActive(true);
 
-        when(spaceShipRepositoryMock.save(any(SpaceShip.class))).thenReturn(spaceShip);
+    when(spaceShipRepositoryMock.save(any(SpaceShip.class))).thenReturn(spaceShip);
 
-        ResponseEntity<SpaceShipResponse> response = spaceShipService.createSpaceShipTask(request);
+    ResponseEntity<SpaceShipResponse> response = spaceShipService.createSpaceShipTask(request);
 
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals("Test Ship", response.getBody().getName());
-        assertEquals("Test Faction Description", response.getBody().getFaction());
-    }
+    assertEquals(HttpStatus.OK, response.getStatusCode());
+    assertEquals("Test Ship", response.getBody().getName());
+    assertEquals("Test Faction Description", response.getBody().getFaction());
+  }
 
-    @Test
-    public void testCreateSpaceShipTask_Exception() {
-        SpaceShipRequest request = new SpaceShipRequest();
-        request.setName("Test Ship");
-        request.setDescription("Test Description");
-        request.setFaction("Test Faction");
+  @Test
+  void testCreateSpaceShipTask_Exception() {
+    SpaceShipRequest request = new SpaceShipRequest();
+    request.setName("Test Ship");
+    request.setDescription("Test Description");
+    request.setFaction("Test Faction");
 
-        when(factionServiceMock.getFactionByCode("Test Faction")).thenThrow(new FactionNotFoundException("Facción no encontrada"));
+    when(factionServiceMock.getFactionByCode("Test Faction"))
+        .thenThrow(new FactionNotFoundException("Facción no encontrada"));
 
-        ResponseEntity<SpaceShipResponse> response = spaceShipService.createSpaceShipTask(request);
+    ResponseEntity<SpaceShipResponse> response = spaceShipService.createSpaceShipTask(request);
 
-        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
-    }
+    assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+  }
 
 
 }
